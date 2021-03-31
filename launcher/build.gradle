@@ -1,0 +1,10 @@
+plugins {
+    id 'tournament.api.kotlin-common-conventions'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
