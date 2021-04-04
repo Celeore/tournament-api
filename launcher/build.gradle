@@ -6,6 +6,10 @@ repositories {
     mavenCentral()
 }
 
+project.ext {
+    configPath = "$rootProject.projectDir/"
+}
+
 dependencies {
     implementation project(':application')
     implementation project(':infrastructure')
@@ -17,7 +21,6 @@ dependencies {
     }
 }
 
-application {
-    // Define the main class for the application.
-    mainClass = 'tournament.api.app.AppKt'
-}
+mainClassName = 'tournament.api.app.App'
+
+run { args 'server', configPath + 'launcher/src/main/resources/my-app-config.yml' }
