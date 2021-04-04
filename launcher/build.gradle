@@ -1,5 +1,5 @@
 plugins {
-    id 'tournament.api.kotlin-common-conventions'
+    id 'tournament.api.kotlin-application-conventions'
 }
 
 repositories {
@@ -7,4 +7,14 @@ repositories {
 }
 
 dependencies {
+    implementation project(':application')
+    implementation project(':infrastructure')
+    implementation project(':domain')
+
+    implementation 'io.dropwizard:dropwizard-core:2.0.20'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'tournament.api.app.AppKt'
 }

@@ -1,8 +1,8 @@
 package tournament.ports.spi
 
-import tournament.data.Player
+import tournament.entities.Player
 
 interface PlayerPersistencePort {
-    fun save(player: Player)
+    fun save(player: Player): Player
     fun getAll(): List<Player>
 }

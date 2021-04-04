@@ -3,14 +3,17 @@
  */
 
 plugins {
-    id 'tournament.api.kotlin-application-conventions'
+    id 'tournament.api.kotlin-common-conventions'
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
     implementation project(':domain')
-}
-
-application {
-    // Define the main class for the application.
-    mainClass = 'tournament.api.app.AppKt'
+    implementation 'io.dropwizard:dropwizard-core:2.0.20'
+    testImplementation('io.dropwizard:dropwizard-testing:2.0.20'){
+        exclude group: 'junit', module: 'junit'
+    }
 }
