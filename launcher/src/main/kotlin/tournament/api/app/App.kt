@@ -3,6 +3,7 @@
  */
 package tournament.api.app
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.dropwizard.Application
 import io.dropwizard.setup.Environment
 import tournament.api.PlayerResource
@@ -26,4 +27,4 @@ class App : Application<MyAppConfig>() {
     }
 }
 
-class MyAppConfig : Configuration()
+class MyAppConfig(@JsonProperty("configTest") val configTest: String) : Configuration()

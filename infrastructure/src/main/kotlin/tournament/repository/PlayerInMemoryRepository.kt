@@ -2,7 +2,7 @@ package tournament.repository
 
 import tournament.entities.Player
 
-class EnMemoireRepo {
+class PlayerInMemoryRepository {
     private val players = mutableMapOf<String, Player>()
 
     fun save(player: Player): Player {

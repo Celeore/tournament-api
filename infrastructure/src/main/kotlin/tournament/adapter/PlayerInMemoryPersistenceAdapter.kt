@@ -2,12 +2,12 @@ package tournament.adapter
 
 import tournament.entities.Player
 import tournament.ports.spi.PlayerPersistencePort
-import tournament.repository.EnMemoireRepo
+import tournament.repository.PlayerInMemoryRepository
 
-class PlayerInMemoryPersistenceAdapter(private val enMemoireRepo: EnMemoireRepo = EnMemoireRepo()) : PlayerPersistencePort {
+class PlayerInMemoryPersistenceAdapter(private val playerInMemoryRepository: PlayerInMemoryRepository = PlayerInMemoryRepository()) : PlayerPersistencePort {
 
-    override fun save(player: Player): Player = enMemoireRepo.save(player)
+    override fun save(player: Player): Player = playerInMemoryRepository.save(player)
 
-    override fun getAll(): List<Player> = enMemoireRepo.getAll()
+    override fun getAll(): List<Player> = playerInMemoryRepository.getAll()
 
 }
