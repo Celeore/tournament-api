@@ -18,7 +18,6 @@ class PlayerLogicTest {
         // Given
         val playerPseudo = "toto"
         val playerExpected = Player(playerPseudo)
-
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
@@ -48,7 +47,7 @@ class PlayerLogicTest {
     }
 
     @Test
-    fun `when create a player then called just once repository`() {
+    fun `should called just once the repository when admin create a player`() {
         // Given
         val playerPseudo = "toto"
         val playerExpected = Player(playerPseudo)
@@ -65,7 +64,7 @@ class PlayerLogicTest {
     }
 
     @Test
-    fun listPlayers() {
+    fun `should return all players from repository`() {
         // Given
         val firstPlayerPseudo = "toto"
         val secondPlayerPseudo = "tata"

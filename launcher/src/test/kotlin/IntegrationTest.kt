@@ -15,31 +15,41 @@ import javax.ws.rs.core.MediaType
 @ExtendWith(DropwizardExtensionsSupport::class)
 class IntegrationTest {
     private val CONFIG_PATH = ResourceHelpers.resourceFilePath("integration-config.yml")
-
-        val APP: DropwizardAppExtension<MyAppConfig> = DropwizardAppExtension(
-        App::class.java, CONFIG_PATH
-    )
-
+    private val APP: DropwizardAppExtension<MyAppConfig> = DropwizardAppExtension(App::class.java, CONFIG_PATH)
 
     @Test
     fun `should save a new player`() {
+        // Given
         val playerApi = PlayerApi("toto")
-        val response: PlayerApi = `call POST player`(playerApi).readEntity(PlayerApi::class.java)
+
+        // When
+        val response: PlayerApi = `call POST player resource`(playerApi).readEntity(PlayerApi::class.java)
+
+        // Then
         assertThat(response).usingRecursiveComparison().isEqualTo(playerApi)
     }
 
     @Test
     fun `should get all players`() {
+        // Given
         val playerApi = PlayerApi("toto")
         val playerApi2 = PlayerApi("tata")
         val playersExpected = listOf(playerApi, playerApi2)
-        playersExpected.forEach{`call POST player`(it)}
-        val response:List<PlayerApi> = APP.client().target("http://localhost:${APP.localPort}/players")
-            .request().get(object : GenericType<List<PlayerApi>>() {})
+        playersExpected.forEach { `call POST player resource`(it) }
+
+        // When
+        val response: List<PlayerApi> = `call GET players resource`()
+
+        // Then
         assertThat(response).usingRecursiveComparison().isEqualTo(playersExpected)
     }
 
-    private fun `call POST player`(playerApi: PlayerApi) =
+    private fun `call GET players resource`() = APP
+        .client()
+        .target("http://localhost:${APP.localPort}/players")
+        .request().get(object : GenericType<List<PlayerApi>>() {})
+
+    private fun `call POST player resource`(playerApi: PlayerApi) =
         APP.client().target("http://localhost:${APP.localPort}/players").queryParam("pseudo", playerApi.pseudo)
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(null)

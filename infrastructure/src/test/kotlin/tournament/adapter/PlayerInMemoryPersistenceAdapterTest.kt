@@ -14,21 +14,29 @@ class PlayerInMemoryPersistenceAdapterTest {
 
     @Test
     fun `should return player repository saved when in memory repository`(){
+        // Given
         val playerSaved = PlayerRepositoryFixture.hasPlayerRepositoryToto()
         val player = playerSaved.toPlayer()
         every { inMemoryRepository.save(player)}.returns(playerSaved)
+
+        // When
         val save = repository.save(player)
+
+        // Then
         assertThat(save).usingRecursiveComparison().isEqualTo(player)
 
     }
 
     @Test
     fun `should return all players from repository`(){
+        // Given
         val playersFromRepository = PlayerRepositoryFixture.hasPlayerRepositoryList()
         val playersExpected = playersFromRepository.map { it.toPlayer() }
         every { inMemoryRepository.getAll() }.returns(playersFromRepository)
+        // When
         val allPlayers = repository.getAll()
 
+        // Then
         assertThat(allPlayers).usingRecursiveComparison().isEqualTo(playersExpected)
     }
 }

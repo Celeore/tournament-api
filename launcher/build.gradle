@@ -14,8 +14,8 @@ dependencies {
     implementation project(':application')
     implementation project(':infrastructure')
     implementation project(':domain')
-
     implementation 'io.dropwizard:dropwizard-core:2.0.20'
+
     testImplementation('io.dropwizard:dropwizard-testing:2.0.20'){
         exclude group: 'junit', module: 'junit'
     }
