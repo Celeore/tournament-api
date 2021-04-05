@@ -4,6 +4,7 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import tournament.entities.Player
+import tournament.fixtures.PlayerRepositoryFixture
 
 internal class PlayerInMemoryRepositoryTest {
     private var inMemoryRepository = PlayerInMemoryRepository()
@@ -14,7 +15,7 @@ internal class PlayerInMemoryRepositoryTest {
     }
     @Test
     fun `save a player repo when received player`(){
-        val playerSavedExpected = PlayerRepository("toto")
+        val playerSavedExpected = PlayerRepositoryFixture.hasPlayerRepositoryToto()
         val player = playerSavedExpected.toPlayer()
 
         val save = inMemoryRepository.save(player)
@@ -24,8 +25,8 @@ internal class PlayerInMemoryRepositoryTest {
 
     @Test
     fun `get all players`(){
-        val player1 = PlayerRepository("toto")
-        val player2 = PlayerRepository("tata")
+        val player1 = PlayerRepositoryFixture.hasPlayerRepositoryToto()
+        val player2 = PlayerRepositoryFixture.hasPlayerRepositoryTata()
         inMemoryRepository.save(player1.toPlayer())
         inMemoryRepository.save(player2.toPlayer())
 
