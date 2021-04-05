@@ -63,8 +63,7 @@ class IntegrationTest {
             val response: List<PlayerApi> = `call GET players resource`()
 
             // Then
-            assertThat(success).isTrue
-                //assertThat(response.find { it.pseudo == playerApi.pseudo }?.points).isEqualTo(playerApi.points)
+            assertThat(response.find { it.pseudo == playerApi.pseudo }?.points).isEqualTo(playerApi.points)
         }
 
 

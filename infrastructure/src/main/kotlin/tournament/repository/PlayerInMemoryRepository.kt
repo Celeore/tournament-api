@@ -12,7 +12,9 @@ class PlayerInMemoryRepository {
         return playerRepository
     }
 
-    internal fun getAll(): List<PlayerRepository> = players.values.toList()
+    internal fun getAll(): List<PlayerRepository>{
+        return players.values.toList()
+    }
 
     internal fun updatePlayer(pseudo: String, points: Int) {
         players[pseudo]?.points = points

@@ -21,7 +21,7 @@ class PlayerFeaturesTest {
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
-        playerFeatures.addPlayer(playerPseudo)
+        playerFeatures.`add new player`(playerPseudo)
 
         // Then
         verify {
@@ -40,7 +40,7 @@ class PlayerFeaturesTest {
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
-        val playerCreated = playerFeatures.addPlayer(playerPseudo)
+        val playerCreated = playerFeatures.`add new player`(playerPseudo)
 
         // Then
         assertThat(playerCreated).usingRecursiveComparison().isEqualTo(playerExpected)
@@ -55,7 +55,7 @@ class PlayerFeaturesTest {
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
-        playerFeatures.addPlayer(playerPseudo)
+        playerFeatures.`add new player`(playerPseudo)
 
         // Then
         verify(exactly = 1) {
@@ -73,7 +73,7 @@ class PlayerFeaturesTest {
         every { repository.getAll() }.returns(listOf(firstPlayer, secondPlayer))
 
         // When
-        val listPlayers = playerFeatures.getAll()
+        val listPlayers = playerFeatures.`retrieve all players`()
 
         //Then
         assertThat(listPlayers).containsExactlyInAnyOrder(firstPlayer, secondPlayer)
@@ -86,7 +86,7 @@ class PlayerFeaturesTest {
         every { repository.updatePoints(player.pseudo, player.points) }.returns(true)
 
         // When
-        val success = playerFeatures.updatePoints(player.pseudo, player.points)
+        val success = playerFeatures.`update points player`(player.pseudo, player.points)
 
         // Then
         assertThat(success).isTrue
@@ -99,7 +99,7 @@ class PlayerFeaturesTest {
         every { repository.updatePoints(player.pseudo, player.points) }.returns(false)
 
         // When
-        val success = playerFeatures.updatePoints(player.pseudo, player.points)
+        val success = playerFeatures.`update points player`(player.pseudo, player.points)
 
         // Then
         assertThat(success).isFalse

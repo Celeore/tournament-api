@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import tournament.entities.Player
 import tournament.ports.api.PlayerServicePort
+import javax.ws.rs.client.Entity
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 
@@ -22,26 +23,26 @@ class PlayerResourceIntegrationTest {
             .addResource( playerResource).build()
 
     @Test
-    fun `when i called get player then i have all player `(){
+    fun `should return all players when i called get player`(){
         // Given
-        val listExpected = PlayerApiFixture.hasPlayerApiList();
-        every { playerServicePort.getAll() } returns listOf(Player("toto"), Player("tata"))
+        val listExpected = PlayerApiFixture.hasPlayerApiList()
+        every { playerServicePort.`retrieve all players`() } returns listOf(Player("toto", 0), Player("tata", 0))
 
         // When
         val response:List<PlayerApi> = playerResources.target("/players")
                 .request().get(object : GenericType<List<PlayerApi>>() {})
 
         // Then
-        verify { playerServicePort.getAll() }
+        verify { playerServicePort.`retrieve all players`() }
         assertThat(response).usingElementComparatorIgnoringFields().containsExactlyInAnyOrderElementsOf(listExpected)
 
     }
 
     @Test
-    fun `when i called post player then i have all player `(){
+    fun `should return player saved when admin called post player`(){
         // Given
         val playerExpected = PlayerApiFixture.hasPlayerToto()
-        every { playerServicePort.addPlayer(playerExpected.pseudo) } returns Player("toto")
+        every { playerServicePort.`add new player`(playerExpected.pseudo) } returns Player("toto", 0)
 
         // When
         val response: PlayerApi = playerResources.target("/players").queryParam("pseudo", playerExpected.pseudo)
@@ -49,8 +50,26 @@ class PlayerResourceIntegrationTest {
                 .post(null).readEntity(PlayerApi::class.java)
 
         // Then
-        verify { playerServicePort.addPlayer(playerExpected.pseudo) }
+        verify { playerServicePort.`add new player`(playerExpected.pseudo) }
         assertThat(response).isEqualTo(playerExpected)
+
+    }
+
+    @Test
+    fun `should return true when i called patch player`(){
+        // Given
+        val playerExpected = PlayerApiFixture.hasPlayerToto()
+        val pointsToUpdate = 10
+        every { playerServicePort.`update points player`(playerExpected.pseudo, pointsToUpdate) } returns true
+        playerExpected.points = pointsToUpdate
+
+        // When
+        val response: Boolean = playerResources.target("/players/${playerExpected.pseudo}")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .method("PATCH", Entity.entity(playerExpected, MediaType.APPLICATION_JSON_TYPE)).readEntity(Boolean::class.java)
+
+        // Then
+        assertThat(response).isTrue
 
     }
 }
