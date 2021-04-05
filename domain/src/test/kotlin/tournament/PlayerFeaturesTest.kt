@@ -9,19 +9,19 @@ import tournament.entities.Player
 import tournament.ports.spi.PlayerPersistencePort
 
 
-class PlayerLogicTest {
+class PlayerFeaturesTest {
     private val repository = mockk<PlayerPersistencePort>()
-    private val tournament = PlayerLogic(repository)
+    private val playerFeatures = PlayerFeatures(repository)
 
     @Test
     fun `create a player`() {
         // Given
         val playerPseudo = "toto"
-        val playerExpected = Player(playerPseudo)
+        val playerExpected = Player(playerPseudo, 0)
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
-        tournament.addPlayer(playerPseudo)
+        playerFeatures.addPlayer(playerPseudo)
 
         // Then
         verify {
@@ -35,12 +35,12 @@ class PlayerLogicTest {
     fun `should return player created when admin add a player `() {
         // Given
         val playerPseudo = "toto"
-        val playerExpected = Player(playerPseudo)
+        val playerExpected = Player(playerPseudo, 0)
 
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
-        val playerCreated = tournament.addPlayer(playerPseudo)
+        val playerCreated = playerFeatures.addPlayer(playerPseudo)
 
         // Then
         assertThat(playerCreated).usingRecursiveComparison().isEqualTo(playerExpected)
@@ -50,12 +50,12 @@ class PlayerLogicTest {
     fun `should called just once the repository when admin create a player`() {
         // Given
         val playerPseudo = "toto"
-        val playerExpected = Player(playerPseudo)
+        val playerExpected = Player(playerPseudo, 0)
 
         every { repository.save(any()) }.returns(playerExpected)
 
         // When
-        tournament.addPlayer(playerPseudo)
+        playerFeatures.addPlayer(playerPseudo)
 
         // Then
         verify(exactly = 1) {
@@ -68,15 +68,41 @@ class PlayerLogicTest {
         // Given
         val firstPlayerPseudo = "toto"
         val secondPlayerPseudo = "tata"
-        val firstPlayer = Player(firstPlayerPseudo)
-        val secondPlayer = Player(secondPlayerPseudo)
+        val firstPlayer = Player(firstPlayerPseudo, 0)
+        val secondPlayer = Player(secondPlayerPseudo, 0)
         every { repository.getAll() }.returns(listOf(firstPlayer, secondPlayer))
 
         // When
-        val listPlayers = tournament.getAll()
+        val listPlayers = playerFeatures.getAll()
 
         //Then
         assertThat(listPlayers).containsExactlyInAnyOrder(firstPlayer, secondPlayer)
+    }
+
+    @Test
+    fun `should return true when player points are modify`(){
+        //Given
+        val player = Player("toto")
+        every { repository.updatePoints(player.pseudo, player.points) }.returns(true)
+
+        // When
+        val success = playerFeatures.updatePoints(player.pseudo, player.points)
+
+        // Then
+        assertThat(success).isTrue
+    }
+
+    @Test
+    fun `should return false when player points are modify and player not exists`(){
+        //Given
+        val player = Player("toto")
+        every { repository.updatePoints(player.pseudo, player.points) }.returns(false)
+
+        // When
+        val success = playerFeatures.updatePoints(player.pseudo, player.points)
+
+        // Then
+        assertThat(success).isFalse
     }
 }
 
