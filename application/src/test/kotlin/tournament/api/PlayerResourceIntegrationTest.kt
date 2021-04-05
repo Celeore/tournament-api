@@ -1,5 +1,6 @@
 package tournament.api
 
+import fixtures.PlayerApiFixture
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport
 import io.dropwizard.testing.junit5.ResourceExtension
 import io.mockk.every
@@ -22,7 +23,7 @@ class PlayerResourceIntegrationTest {
 
     @Test
     fun `when i called get player then i have all player `(){
-        val listExpected = listOf(PlayerApi("toto"), PlayerApi("tata"))
+        val listExpected = PlayerApiFixture.hasPlayerApiList();
         every { playerServicePort.getAll() } returns listOf(Player("toto"), Player("tata"))
         val response:List<PlayerApi> = playerResources.target("/players")
                 .request().get(object : GenericType<List<PlayerApi>>() {})
@@ -33,7 +34,7 @@ class PlayerResourceIntegrationTest {
 
     @Test
     fun `when i called post player then i have all player `(){
-        val playerExpected = PlayerApi("toto")
+        val playerExpected = PlayerApiFixture.hasPlayerToto()
         every { playerServicePort.addPlayer(playerExpected.pseudo) } returns Player("toto")
         val response: PlayerApi = playerResources.target("/players").queryParam("pseudo", playerExpected.pseudo)
                 .request(MediaType.APPLICATION_JSON_TYPE)
