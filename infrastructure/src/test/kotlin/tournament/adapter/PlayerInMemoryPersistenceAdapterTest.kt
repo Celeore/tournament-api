@@ -6,6 +6,7 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 import tournament.entities.Player
 import tournament.repository.PlayerInMemoryRepository
+import tournament.repository.PlayerRepository
 
 class PlayerInMemoryPersistenceAdapterTest {
     private val inMemoryRepository = mockk<PlayerInMemoryRepository>()
@@ -13,9 +14,10 @@ class PlayerInMemoryPersistenceAdapterTest {
     private val repository = PlayerInMemoryPersistenceAdapter(inMemoryRepository)
 
     @Test
-    fun `should return player saved when in memory repository`(){
+    fun `should return player repository saved when in memory repository`(){
         val player = Player("toto")
-        every { inMemoryRepository.save(player)}.returns(player)
+        val playerSaved = PlayerRepository("toto")
+        every { inMemoryRepository.save(player)}.returns(playerSaved)
         val save = repository.save(player)
         assertThat(save).usingRecursiveComparison().isEqualTo(player)
 
@@ -23,10 +25,11 @@ class PlayerInMemoryPersistenceAdapterTest {
 
     @Test
     fun `should return all players from repository`(){
+        val playersFromRepository = listOf(PlayerRepository("toto"), PlayerRepository("tata"))
         val playersExpected = listOf(Player("toto"), Player("tata"))
-        every { inMemoryRepository.getAll() }.returns(playersExpected)
+        every { inMemoryRepository.getAll() }.returns(playersFromRepository)
         val allPlayers = repository.getAll()
 
-        assertThat(allPlayers).containsAll(playersExpected)
+        assertThat(allPlayers).usingRecursiveComparison().isEqualTo(playersExpected)
     }
 }

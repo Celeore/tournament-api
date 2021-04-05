@@ -13,19 +13,24 @@ internal class PlayerInMemoryRepositoryTest {
         inMemoryRepository = PlayerInMemoryRepository()
     }
     @Test
-    fun `save a player`(){
-        val player = Player("toto")
+    fun `save a player repo when received player`(){
+        val playerSavedExpected = PlayerRepository("toto")
+        val player = playerSavedExpected.toPlayer()
+
         val save = inMemoryRepository.save(player)
-        assertThat(save).usingRecursiveComparison().isEqualTo(player)
+
+        assertThat(save).usingRecursiveComparison().isEqualTo(playerSavedExpected)
     }
 
     @Test
     fun `get all players`(){
-        val player1 = Player("toto")
-        val player2 = Player("tata")
-        inMemoryRepository.save(player1)
-        inMemoryRepository.save(player2)
+        val player1 = PlayerRepository("toto")
+        val player2 = PlayerRepository("tata")
+        inMemoryRepository.save(player1.toPlayer())
+        inMemoryRepository.save(player2.toPlayer())
+
         val allPlayer = inMemoryRepository.getAll()
+
         assertThat(allPlayer).containsAll(listOf(player1, player2))
     }
 

@@ -2,14 +2,16 @@ package tournament.repository
 
 import tournament.entities.Player
 
-class PlayerInMemoryRepository {
-    private val players = mutableMapOf<String, Player>()
 
-    fun save(player: Player): Player {
-        players[player.pseudo] = player
-        return player
+class PlayerInMemoryRepository {
+    private val players = mutableMapOf<String, PlayerRepository>()
+
+    fun save(player: Player): PlayerRepository {
+        val playerRepository = PlayerRepository(player.pseudo)
+        players[player.pseudo] = playerRepository
+        return playerRepository
     }
 
-    fun getAll(): List<Player> = players.values.toList()
+    fun getAll(): List<PlayerRepository> = players.values.toList()
 
 }
