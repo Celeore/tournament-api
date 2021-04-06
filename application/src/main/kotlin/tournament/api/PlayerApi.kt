@@ -2,4 +2,12 @@ package tournament.api
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class PlayerApi(@JsonProperty("pseudo") val pseudo:String, @JsonProperty("points") var points:Int = 0)
+abstract class Player(open val pseudo: String, open val points: Int)
+
+data class PlayerWithRankingApi(@JsonProperty("pseudo")override val pseudo: String, @JsonProperty("points") override val points: Int, @JsonProperty("position") val position: Int) :
+    Player(pseudo, points)
+
+data class PlayerApi(
+    @JsonProperty("pseudo") override val pseudo: String,
+    @JsonProperty("points") override var points: Int = 0
+) : Player(pseudo, points)
