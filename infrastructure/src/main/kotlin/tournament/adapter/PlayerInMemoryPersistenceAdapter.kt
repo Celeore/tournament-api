@@ -3,7 +3,6 @@ package tournament.adapter
 import tournament.entities.Player
 import tournament.ports.spi.PlayerPersistencePort
 import tournament.repository.PlayerInMemoryRepository
-import tournament.repository.PlayerRepository
 
 class PlayerInMemoryPersistenceAdapter(private val playerInMemoryRepository: PlayerInMemoryRepository = PlayerInMemoryRepository()) : PlayerPersistencePort {
 

@@ -1,4 +1,5 @@
 package tournament.entities
 
+class PlayerWithRanking( pseudo: String, points: Int, val ranking: Int):Player(pseudo, points)
 
-class Player(val pseudo: String, val points: Int = 0)
+open class Player(val pseudo: String, val points: Int = 0)

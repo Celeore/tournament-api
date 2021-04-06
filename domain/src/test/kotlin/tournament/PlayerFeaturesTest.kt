@@ -5,16 +5,23 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import tournament.entities.Player
+import tournament.entities.PlayerWithRanking
 import tournament.ports.spi.PlayerPersistencePort
+import java.lang.IllegalArgumentException
 
 
 class PlayerFeaturesTest {
     private val repository = mockk<PlayerPersistencePort>()
     private val playerFeatures = PlayerFeatures(repository)
+    private val firstPlayerPseudo = "toto"
+    private val secondPlayerPseudo = "tata"
+    var firstPlayerWith0Point = Player(firstPlayerPseudo, 0)
+    var secondPlayerWith10Points = Player(secondPlayerPseudo, 10)
 
     @BeforeEach
     fun init() {
@@ -79,25 +86,21 @@ class PlayerFeaturesTest {
         @Test
         fun `should return all players sorted by points from repository`() {
             // Given
-            val firstPlayerPseudo = "toto"
-            val secondPlayerPseudo = "tata"
-            val firstPlayer = Player(firstPlayerPseudo, 0)
-            val secondPlayer = Player(secondPlayerPseudo, 10)
-            every { repository.getAll() }.returns(listOf(firstPlayer, secondPlayer))
+            every { repository.getAll() }.returns(listOf(firstPlayerWith0Point, secondPlayerWith10Points))
 
             // When
             val listPlayers = playerFeatures.`retrieve all players sorted by points`()
 
             //Then
-            assertThat(listPlayers.first()).usingRecursiveComparison().isEqualTo(secondPlayer)
-            assertThat(listPlayers.component2()).usingRecursiveComparison().isEqualTo(firstPlayer)
+            assertThat(listPlayers.first()).usingRecursiveComparison().isEqualTo(secondPlayerWith10Points)
+            assertThat(listPlayers.component2()).usingRecursiveComparison().isEqualTo(firstPlayerWith0Point)
         }
     }
 
     @Nested
     inner class UpdatePlayerPoints {
         @Test
-        fun `should return true when player points are modify`() {
+        fun `should return true when player points are modified`() {
             //Given
             val player = Player("toto")
             every { repository.updatePoints(player.pseudo, player.points) }.returns(true)
@@ -123,5 +126,37 @@ class PlayerFeaturesTest {
         }
     }
 
+    @Nested
+    inner class GetPlayerInformations {
+
+        @Test
+        fun `cannot get informations when player does not exist`(){
+            // Given
+            val unexistingPlayer = "unexisting player"
+            every{ repository.getAll() }.returns(emptyList())
+
+            // When
+            // Then
+            assertThatThrownBy { playerFeatures.`get informations`(unexistingPlayer)}
+                .isInstanceOf(IllegalArgumentException::class.java)
+                .hasMessage("Player $unexistingPlayer does not exist")
+        }
+
+
+        @Test
+        fun `should throw not found player information with first ranking from repository`(){
+            // Given
+            val firstPlace = 1
+            val playerExpected = PlayerWithRanking(secondPlayerWith10Points.pseudo,secondPlayerWith10Points.points, firstPlace)
+            every{ repository.getAll() }.returns(listOf(firstPlayerWith0Point, secondPlayerWith10Points))
+
+            // When
+            val player = playerFeatures.`get informations`(secondPlayerWith10Points.pseudo)
+
+            // Then
+            assertThat(player).usingRecursiveComparison().isEqualTo(playerExpected)
+        }
+
+    }
 }
 
