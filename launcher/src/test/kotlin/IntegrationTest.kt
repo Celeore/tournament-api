@@ -27,7 +27,7 @@ class IntegrationTest {
             val playerApi = PlayerApi("toto")
 
             // When
-            val response: PlayerApi = `call POST player resource`(playerApi).readEntity(PlayerApi::class.java)
+            val response: PlayerApi = `call create player resource`(playerApi).readEntity(PlayerApi::class.java)
 
             // Then
             assertThat(response).usingRecursiveComparison().isEqualTo(playerApi)
@@ -39,43 +39,66 @@ class IntegrationTest {
             val playerApi = PlayerApi("toto")
             val playerApi2 = PlayerApi("tata")
             val playersExpected = listOf(playerApi, playerApi2)
-            playersExpected.forEach { `call POST player resource`(it) }
+            playersExpected.forEach { `call create player resource`(it) }
 
             // When
-            val response: List<PlayerApi> = `call GET players resource`()
+            val response: List<PlayerApi> = `call get players sorted resource`()
 
             // Then
             assertThat(response).usingRecursiveComparison().isEqualTo(playersExpected)
         }
 
         @Test
+        fun `should get all players sorted by points`() {
+            // Given
+            val playerApi = PlayerApi("toto")
+            val playerApi2 = PlayerApi("tata")
+            val playerApi3 = PlayerApi("titi")
+            val playersSortedExpected = listOf(playerApi2, playerApi, playerApi3)
+            playersSortedExpected.forEach { `call create player resource`(it) }
+            playerApi.points = 20
+            playerApi2.points = 30
+            playerApi3.points = 1
+            playersSortedExpected.forEach { `call modify player points resource`(it) }
+
+            // When
+            val response: List<PlayerApi> = `call get players sorted resource`()
+
+            // Then
+            assertThat(response).usingRecursiveComparison().isEqualTo(playersSortedExpected)
+        }
+
+        @Test
         fun `should modify point of player`() {
             // Given
             val playerApi = PlayerApi("toto")
-            `call POST player resource`(playerApi)
+            `call create player resource`(playerApi)
             playerApi.points = 10
-            val success = APP.client()
-                .target("http://localhost:${APP.localPort}/players/${playerApi.pseudo}")
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .method("PATCH", Entity.entity(playerApi, MediaType.APPLICATION_JSON_TYPE)).readEntity(Boolean::class.java)
+            val success = `call modify player points resource`(playerApi)
 
             // When
-            val response: List<PlayerApi> = `call GET players resource`()
+            val response: List<PlayerApi> = `call get players sorted resource`()
 
             // Then
+            assertThat(success).isTrue
             assertThat(response.find { it.pseudo == playerApi.pseudo }?.points).isEqualTo(playerApi.points)
         }
 
 
     }
 
+    private fun `call modify player points resource`(playerApi: PlayerApi) = APP.client()
+        .target("http://localhost:${APP.localPort}/players/${playerApi.pseudo}")
+        .request(MediaType.APPLICATION_JSON_TYPE)
+        .method("PATCH", Entity.entity(playerApi, MediaType.APPLICATION_JSON_TYPE)).readEntity(Boolean::class.java)
 
-    private fun `call GET players resource`() = APP
+
+    private fun `call get players sorted resource`() = APP
         .client()
         .target("http://localhost:${APP.localPort}/players")
         .request().get(object : GenericType<List<PlayerApi>>() {})
 
-    private fun `call POST player resource`(playerApi: PlayerApi) =
+    private fun `call create player resource`(playerApi: PlayerApi) =
         APP.client().target("http://localhost:${APP.localPort}/players").queryParam("pseudo", playerApi.pseudo)
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(null)

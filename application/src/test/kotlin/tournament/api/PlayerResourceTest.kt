@@ -15,11 +15,11 @@ class PlayerResourceTest {
     @Test
     fun `should return all players when admin call get all players`() {
         // Given
-        val listExpected = PlayerApiFixture.hasPlayerApiList();
+        val listExpected = PlayerApiFixture.hasPlayerApiList()
         every { playerServicePort.`retrieve all players sorted by points`() } returns listOf(Player("toto", 0), Player("tata", 0))
 
         // When
-        val list = playerResource.`get all players`()
+        val list = playerResource.`get all players sorted by points`()
 
         // Then
         assertThat(list).usingElementComparatorIgnoringFields().containsExactlyInAnyOrderElementsOf(listExpected)
