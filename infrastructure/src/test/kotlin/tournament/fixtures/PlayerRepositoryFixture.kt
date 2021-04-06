@@ -8,10 +8,10 @@ class PlayerRepositoryFixture {
         private val PLAYER_REPOSITORY_WITH_PSEUDO_TATA: PlayerRepository = PlayerRepository(pseudo = "tata")
 
         fun hasPlayerRepositoryToto(): PlayerRepository {
-            return PLAYER_REPOSITORY_WITH_PSEUDO_TOTO
+            return PLAYER_REPOSITORY_WITH_PSEUDO_TOTO.copy()
         }
         fun hasPlayerRepositoryTata(): PlayerRepository {
-            return PLAYER_REPOSITORY_WITH_PSEUDO_TATA
+            return PLAYER_REPOSITORY_WITH_PSEUDO_TATA.copy()
         }
 
         fun hasPlayerRepositoryList(): List<PlayerRepository> {

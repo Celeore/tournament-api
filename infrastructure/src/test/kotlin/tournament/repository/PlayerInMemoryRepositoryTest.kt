@@ -10,7 +10,7 @@ internal class PlayerInMemoryRepositoryTest {
 
     @BeforeEach
     fun clear(){
-        inMemoryRepository = PlayerInMemoryRepository()
+        inMemoryRepository.deleteAll()
     }
     @Test
     fun `save a player repo when received player`(){
@@ -38,6 +38,39 @@ internal class PlayerInMemoryRepositoryTest {
 
         // Then
         assertThat(allPlayer).containsAll(listOf(player1, player2))
+    }
+
+    @Test
+    fun `should modify points player`(){
+        // Given
+        val player1 = PlayerRepositoryFixture.hasPlayerRepositoryToto()
+        inMemoryRepository.save(player1.toPlayer())
+        player1.points = 10
+        // When
+        inMemoryRepository.updatePlayer(player1.pseudo, player1.points)
+        // Then
+        val playerUpdated = inMemoryRepository.getAll().first{it.pseudo==player1.pseudo}
+        assertThat(playerUpdated.points).isEqualTo(player1.points)
+    }
+
+    @Test
+    fun `should notExistsPlayer() return false when player exists`(){
+        // Given
+        val player1 = PlayerRepositoryFixture.hasPlayerRepositoryToto()
+        inMemoryRepository.save(player1.toPlayer())
+        // When
+        val notExistsPlayer = inMemoryRepository.notExistsPlayer(player1.pseudo)
+        // Then
+        assertThat(notExistsPlayer).isFalse
+    }
+
+    @Test
+    fun `should notExistsPlayer() return true when player exists`(){
+        // Given
+        // When
+        val notExistsPlayer = inMemoryRepository.notExistsPlayer(PlayerRepositoryFixture.hasPlayerRepositoryToto().pseudo)
+        // Then
+        assertThat(notExistsPlayer).isTrue
     }
 
 }

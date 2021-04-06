@@ -6,12 +6,22 @@ import tournament.entities.Player
 class PlayerInMemoryRepository {
     private val players = mutableMapOf<String, PlayerRepository>()
 
-    fun save(player: Player): PlayerRepository {
-        val playerRepository = PlayerRepository(player.pseudo)
+    internal fun save(player: Player): PlayerRepository {
+        val playerRepository = PlayerRepository(player.pseudo, player.points)
         players[player.pseudo] = playerRepository
         return playerRepository
     }
 
-    fun getAll(): List<PlayerRepository> = players.values.toList()
+    internal fun getAll(): List<PlayerRepository>{
+        return players.values.toList()
+    }
+
+    internal fun updatePlayer(pseudo: String, points: Int) {
+        players[pseudo]?.points = points
+    }
+
+    internal fun notExistsPlayer(pseudo: String): Boolean = !players.containsKey(pseudo)
+
+    internal fun deleteAll() = players.clear()
 
 }
