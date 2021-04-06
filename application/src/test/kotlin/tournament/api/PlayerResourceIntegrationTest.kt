@@ -26,14 +26,14 @@ class PlayerResourceIntegrationTest {
     fun `should return all players when i called get player`(){
         // Given
         val listExpected = PlayerApiFixture.hasPlayerApiList()
-        every { playerServicePort.`retrieve all players`() } returns listOf(Player("toto", 0), Player("tata", 0))
+        every { playerServicePort.`retrieve all players sorted by points`() } returns listOf(Player("toto", 0), Player("tata", 0))
 
         // When
         val response:List<PlayerApi> = playerResources.target("/players")
                 .request().get(object : GenericType<List<PlayerApi>>() {})
 
         // Then
-        verify { playerServicePort.`retrieve all players`() }
+        verify { playerServicePort.`retrieve all players sorted by points`() }
         assertThat(response).usingElementComparatorIgnoringFields().containsExactlyInAnyOrderElementsOf(listExpected)
 
     }

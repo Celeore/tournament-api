@@ -64,19 +64,20 @@ class PlayerFeaturesTest {
     }
 
     @Test
-    fun `should return all players from repository`() {
+    fun `should return all players sorted by points from repository`() {
         // Given
         val firstPlayerPseudo = "toto"
         val secondPlayerPseudo = "tata"
         val firstPlayer = Player(firstPlayerPseudo, 0)
-        val secondPlayer = Player(secondPlayerPseudo, 0)
+        val secondPlayer = Player(secondPlayerPseudo, 10)
         every { repository.getAll() }.returns(listOf(firstPlayer, secondPlayer))
 
         // When
-        val listPlayers = playerFeatures.`retrieve all players`()
+        val listPlayers = playerFeatures.`retrieve all players sorted by points`()
 
         //Then
-        assertThat(listPlayers).containsExactlyInAnyOrder(firstPlayer, secondPlayer)
+        assertThat(listPlayers.first()).usingRecursiveComparison().isEqualTo(secondPlayer)
+        assertThat(listPlayers.component2()).usingRecursiveComparison().isEqualTo(firstPlayer)
     }
 
     @Test
