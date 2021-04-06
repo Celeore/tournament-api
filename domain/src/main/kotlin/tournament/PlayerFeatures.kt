@@ -5,15 +5,15 @@ import tournament.ports.api.PlayerServicePort
 import tournament.ports.spi.PlayerPersistencePort
 
 class PlayerFeatures(
-        private val repository: PlayerPersistencePort) : PlayerServicePort {
+        private val repositoryPlayer: PlayerPersistencePort) : PlayerServicePort {
     override fun `add new player`(pseudo: String): Player =
             Player(pseudo, 0)
-                    .also { newPlayer -> repository.save(newPlayer) }
+                    .also { newPlayer -> repositoryPlayer.save(newPlayer) }
 
 
-    override fun `retrieve all players`(): List<Player> =
-            repository.getAll()
+    override fun `retrieve all players sorted by points`(): List<Player> =
+            repositoryPlayer.getAll().sortedByDescending { it.points }
 
-    override fun `update points player`(pseudo: String, points: Int): Boolean = repository.updatePoints(pseudo, points)
+    override fun `update points player`(pseudo: String, points: Int): Boolean = repositoryPlayer.updatePoints(pseudo, points)
 
 }

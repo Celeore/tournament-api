@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType
 class PlayerResource(private val service: PlayerServicePort) {
 
     @GET
-    fun `get all players`():List<PlayerApi> = service.`retrieve all players`().map { toPlayerApi(it) }.toMutableList()
+    fun `get all players`():List<PlayerApi> = service.`retrieve all players sorted by points`().map { toPlayerApi(it) }.toMutableList()
     @POST
     fun `save a new player`(@QueryParam("pseudo") pseudo: String): PlayerApi = toPlayerApi(service.`add new player`(pseudo))
 
