@@ -10,6 +10,7 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import tournament.entities.Player
+import tournament.entities.PlayerWithRanking
 import tournament.ports.api.PlayerServicePort
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.GenericType
@@ -20,17 +21,20 @@ class PlayerResourceIntegrationTest {
     private val playerServicePort: PlayerServicePort = mockk()
     private val playerResource = PlayerResource(playerServicePort)
     private val playerResources = ResourceExtension.builder()
-            .addResource( playerResource).build()
+        .addResource(playerResource).build()
 
     @Test
-    fun `should return all players when i called get player`(){
+    fun `should return all players when i called get player`() {
         // Given
         val listExpected = PlayerApiFixture.hasPlayerApiList()
-        every { playerServicePort.`retrieve all players sorted by points`() } returns listOf(Player("toto", 0), Player("tata", 0))
+        every { playerServicePort.`retrieve all players sorted by points`() } returns listOf(
+            Player("toto", 0),
+            Player("tata", 0)
+        )
 
         // When
-        val response:List<PlayerApi> = playerResources.target("/players")
-                .request().get(object : GenericType<List<PlayerApi>>() {})
+        val response: List<PlayerApi> = playerResources.target("/players")
+            .request().get(object : GenericType<List<PlayerApi>>() {})
 
         // Then
         verify { playerServicePort.`retrieve all players sorted by points`() }
@@ -39,15 +43,15 @@ class PlayerResourceIntegrationTest {
     }
 
     @Test
-    fun `should return player saved when admin called post player`(){
+    fun `should return player saved when admin called post player`() {
         // Given
         val playerExpected = PlayerApiFixture.hasPlayerToto()
         every { playerServicePort.`add new player`(playerExpected.pseudo) } returns Player("toto", 0)
 
         // When
         val response: PlayerApi = playerResources.target("/players").queryParam("pseudo", playerExpected.pseudo)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .post(null).readEntity(PlayerApi::class.java)
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .post(null).readEntity(PlayerApi::class.java)
 
         // Then
         verify { playerServicePort.`add new player`(playerExpected.pseudo) }
@@ -56,7 +60,7 @@ class PlayerResourceIntegrationTest {
     }
 
     @Test
-    fun `should return true when i called patch player`(){
+    fun `should return true when i called patch player`() {
         // Given
         val playerExpected = PlayerApiFixture.hasPlayerToto()
         val pointsToUpdate = 10
@@ -66,10 +70,30 @@ class PlayerResourceIntegrationTest {
         // When
         val response: Boolean = playerResources.target("/players/${playerExpected.pseudo}")
             .request(MediaType.APPLICATION_JSON_TYPE)
-            .method("PATCH", Entity.entity(playerExpected, MediaType.APPLICATION_JSON_TYPE)).readEntity(Boolean::class.java)
+            .method("PATCH", Entity.entity(playerExpected, MediaType.APPLICATION_JSON_TYPE))
+            .readEntity(Boolean::class.java)
 
         // Then
         assertThat(response).isTrue
+    }
 
+    @Test
+    fun `should return players informations`() {
+        // Given
+        val playerToto = PlayerApiFixture.hasPlayerToto()
+        val playerExpected = PlayerWithRankingApi(playerToto.pseudo, playerToto.points, 1)
+        every { playerServicePort.`get informations`(playerExpected.pseudo) } returns PlayerWithRanking(
+            playerExpected.pseudo,
+            playerExpected.points,
+            1
+        )
+
+        // When
+        val response = playerResources.target("/players/${playerExpected.pseudo}")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(PlayerWithRankingApi::class.java)
+
+        // Then
+        assertThat(response).isEqualTo(playerExpected)
     }
 }

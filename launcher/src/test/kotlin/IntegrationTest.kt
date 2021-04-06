@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import tournament.api.PlayerApi
+import tournament.api.PlayerWithRankingApi
 import tournament.api.app.App
 import tournament.api.app.MyAppConfig
 import javax.ws.rs.client.Entity
@@ -84,22 +85,51 @@ class IntegrationTest {
             assertThat(response.find { it.pseudo == playerApi.pseudo }?.points).isEqualTo(playerApi.points)
         }
 
+        @Test
+        fun `should get player pseudo, points and his ranking (`() {
+            // Given
+            val playerApi = PlayerApi("toto")
+            `call create player resource`(playerApi)
+            playerApi.points = 10
+            `call modify player points resource`(playerApi)
+            val playerWithRankingApiExpected = PlayerWithRankingApi(playerApi.pseudo, playerApi.points, 1)
 
+            // When
+            val response = `call get player informations`(playerApi)
+
+            // Then
+            assertThat(response).isEqualTo(playerWithRankingApiExpected)
+        }
     }
 
-    private fun `call modify player points resource`(playerApi: PlayerApi) = APP.client()
-        .target("http://localhost:${APP.localPort}/players/${playerApi.pseudo}")
-        .request(MediaType.APPLICATION_JSON_TYPE)
-        .method("PATCH", Entity.entity(playerApi, MediaType.APPLICATION_JSON_TYPE)).readEntity(Boolean::class.java)
+    private fun `call get player informations`(playerApi: PlayerApi): PlayerWithRankingApi =
+        APP
+            .client()
+            .target("http://localhost:${APP.localPort}/players/${playerApi.pseudo}")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(PlayerWithRankingApi::class.java)
+
+    private fun `call modify player points resource`(playerApi: PlayerApi) =
+        APP
+            .client()
+            .target("http://localhost:${APP.localPort}/players/${playerApi.pseudo}")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .method("PATCH", Entity.entity(playerApi, MediaType.APPLICATION_JSON_TYPE))
+            .readEntity(Boolean::class.java)
 
 
-    private fun `call get players sorted resource`() = APP
-        .client()
-        .target("http://localhost:${APP.localPort}/players")
-        .request().get(object : GenericType<List<PlayerApi>>() {})
+    private fun `call get players sorted resource`() =
+        APP
+            .client()
+            .target("http://localhost:${APP.localPort}/players")
+            .request(MediaType.APPLICATION_JSON_TYPE)
+            .get(object : GenericType<List<PlayerApi>>() {})
 
     private fun `call create player resource`(playerApi: PlayerApi) =
-        APP.client().target("http://localhost:${APP.localPort}/players").queryParam("pseudo", playerApi.pseudo)
+        APP
+            .client()
+            .target("http://localhost:${APP.localPort}/players")
+            .queryParam("pseudo", playerApi.pseudo)
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(null)
 }
