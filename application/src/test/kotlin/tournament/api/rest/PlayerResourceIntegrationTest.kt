@@ -1,4 +1,4 @@
-package tournament.api
+package tournament.api.rest
 
 import fixtures.PlayerApiFixture
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport
@@ -9,6 +9,8 @@ import io.mockk.verify
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import tournament.api.PlayerApi
+import tournament.api.PlayerWithRankingApi
 import tournament.entities.Player
 import tournament.entities.PlayerWithRanking
 import tournament.ports.api.PlayerServicePort

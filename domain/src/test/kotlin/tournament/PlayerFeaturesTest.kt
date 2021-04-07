@@ -100,15 +100,17 @@ class PlayerFeaturesTest {
     @Nested
     inner class UpdatePlayerPoints {
         @Test
-        fun `should return true when player points are modified`() {
+        fun `should return true when player points can be modified`() {
             //Given
-            val player = Player("toto")
-            every { repository.updatePoints(player.pseudo, player.points) }.returns(true)
+            val player = Player("toto",10)
+            every { repository.exists(player.pseudo) }.returns(true)
+            every { repository.updatePoints(player.pseudo, player.points) }.returns(Unit)
 
             // When
             val success = playerFeatures.`update points player`(player.pseudo, player.points)
 
             // Then
+            verify(exactly = 1) { repository.updatePoints(any(),any()) }
             assertThat(success).isTrue
         }
 
@@ -116,12 +118,13 @@ class PlayerFeaturesTest {
         fun `should return false when player points are modify and player not exists`() {
             //Given
             val player = Player("toto")
-            every { repository.updatePoints(player.pseudo, player.points) }.returns(false)
+            every { repository.exists(player.pseudo) }.returns(false)
 
             // When
             val success = playerFeatures.`update points player`(player.pseudo, player.points)
 
             // Then
+            verify(exactly = 0) { repository.updatePoints(any(),any()) }
             assertThat(success).isFalse
         }
     }
@@ -134,6 +137,7 @@ class PlayerFeaturesTest {
             // Given
             val unexistingPlayer = "unexisting player"
             every{ repository.getAll() }.returns(emptyList())
+            every{ repository.exists(unexistingPlayer) }.returns(false)
 
             // When
             // Then
@@ -144,11 +148,12 @@ class PlayerFeaturesTest {
 
 
         @Test
-        fun `should throw not found player information with first ranking from repository`(){
+        fun `should get player information with first ranking from repository`(){
             // Given
             val firstPlace = 1
             val playerExpected = PlayerWithRanking(secondPlayerWith10Points.pseudo,secondPlayerWith10Points.points, firstPlace)
             every{ repository.getAll() }.returns(listOf(firstPlayerWith0Point, secondPlayerWith10Points))
+            every{ repository.exists(playerExpected.pseudo) }.returns(true)
 
             // When
             val player = playerFeatures.`get informations`(secondPlayerWith10Points.pseudo)

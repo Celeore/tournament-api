@@ -6,7 +6,7 @@ package tournament.api.app
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.dropwizard.Application
 import io.dropwizard.setup.Environment
-import tournament.api.PlayerResource
+import tournament.api.rest.PlayerResource
 import io.dropwizard.Configuration
 import tournament.PlayerFeatures
 import tournament.adapter.PlayerInMemoryPersistenceAdapter

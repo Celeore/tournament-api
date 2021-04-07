@@ -9,11 +9,12 @@ class PlayerInMemoryPersistenceAdapter(private val playerInMemoryRepository: Pla
     override fun save(player: Player): Player = playerInMemoryRepository.save(player).toPlayer()
 
     override fun getAll(): List<Player> = playerInMemoryRepository.getAll().map { it.toPlayer() }
-    override fun updatePoints(pseudo: String, points: Int): Boolean {
-        if(playerInMemoryRepository.notExistsPlayer(pseudo)) return false
+    override fun updatePoints(pseudo: String, points: Int) {
         playerInMemoryRepository.updatePlayer(pseudo, points)
-        return true
     }
+
+    override fun exists(pseudo: String): Boolean =
+        !playerInMemoryRepository.notExistsPlayer(pseudo)
 
 
 }

@@ -1,5 +1,7 @@
-package tournament.api
+package tournament.api.rest
 
+import tournament.api.PlayerApi
+import tournament.api.PlayerWithRankingApi
 import tournament.entities.Player
 import tournament.entities.PlayerWithRanking
 import tournament.ports.api.PlayerServicePort
@@ -29,11 +31,11 @@ class PlayerResource(private val service: PlayerServicePort) {
         = toPlayerWithRankingApi(service.`get informations`(pseudo))
 
 
-    private fun toPlayerApi(player: Player): PlayerApi{
+    private fun toPlayerApi(player: Player): PlayerApi {
         return PlayerApi(player.pseudo, player.points)
     }
 
-    private fun toPlayerWithRankingApi(player: PlayerWithRanking): PlayerWithRankingApi{
+    private fun toPlayerWithRankingApi(player: PlayerWithRanking): PlayerWithRankingApi {
         return PlayerWithRankingApi(player.pseudo, player.points, player.ranking)
     }
 }
