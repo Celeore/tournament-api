@@ -10,7 +10,7 @@ internal class PlayerInMemoryRepositoryTest {
 
     @BeforeEach
     fun clear(){
-        inMemoryRepository.deleteAll()
+        inMemoryRepository.removeAll()
     }
     @Test
     fun `save a player repo when received player`(){
@@ -71,6 +71,16 @@ internal class PlayerInMemoryRepositoryTest {
         val notExistsPlayer = inMemoryRepository.notExistsPlayer(PlayerRepositoryFixture.hasPlayerRepositoryToto().pseudo)
         // Then
         assertThat(notExistsPlayer).isTrue
+    }
+
+    @Test
+    fun `should clear players when removeAll called`(){
+        // Given
+        inMemoryRepository.save(PlayerRepositoryFixture.hasPlayerRepositoryToto().toPlayer())
+        // When
+        inMemoryRepository.removeAll()
+        // Then
+        assertThat(inMemoryRepository.getAll()).isEmpty()
     }
 
 }

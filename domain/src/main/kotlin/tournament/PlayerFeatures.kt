@@ -1,9 +1,9 @@
 package tournament
 
-import tournament.entities.*
-import tournament.ports.api.*
+import tournament.entities.Player
+import tournament.entities.PlayerWithRanking
+import tournament.ports.api.PlayerServicePort
 import tournament.ports.spi.PlayerPersistencePort
-import java.lang.IllegalArgumentException
 
 class PlayerFeatures(
     private val repositoryPlayer: PlayerPersistencePort
@@ -14,7 +14,6 @@ class PlayerFeatures(
 
 
     override fun `retrieve all players sorted by points`(): List<Player> = `get all players sorted by points`()
-
 
     override fun `update points player`(pseudo: String, points: Int): Boolean {
         val canUpdatePlayer = repositoryPlayer.exists(pseudo)
@@ -35,6 +34,8 @@ class PlayerFeatures(
             } else -> throw PlayerNotExistsException(pseudo)
         }
     }
+
+    override fun `remove all`() = repositoryPlayer.deleteAll()
 
     private fun `get all players sorted by points`() = repositoryPlayer.getAll().sortedByDescending { it.points }
 

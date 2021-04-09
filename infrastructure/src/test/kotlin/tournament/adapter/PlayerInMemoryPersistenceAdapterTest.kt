@@ -13,11 +13,11 @@ class PlayerInMemoryPersistenceAdapterTest {
     private val repository = PlayerInMemoryPersistenceAdapter(inMemoryRepository)
 
     @Test
-    fun `should return player repository saved when in memory repository`(){
+    fun `should return player repository saved when in memory repository`() {
         // Given
         val playerSaved = PlayerRepositoryFixture.hasPlayerRepositoryToto()
         val player = playerSaved.toPlayer()
-        every { inMemoryRepository.save(player)}.returns(playerSaved)
+        every { inMemoryRepository.save(player) }.returns(playerSaved)
 
         // When
         val save = repository.save(player)
@@ -28,7 +28,7 @@ class PlayerInMemoryPersistenceAdapterTest {
     }
 
     @Test
-    fun `should return all players from repository`(){
+    fun `should return all players from repository`() {
         // Given
         val playersFromRepository = PlayerRepositoryFixture.hasPlayerRepositoryList()
         val playersExpected = playersFromRepository.map { it.toPlayer() }
@@ -42,7 +42,7 @@ class PlayerInMemoryPersistenceAdapterTest {
     }
 
     @Test
-    fun `should call once repository when admin modify player points`(){
+    fun `should call once repository when admin modify player points`() {
         // Given
         val pointsToUpdate = 10
         val playerToto = PlayerRepositoryFixture.hasPlayerRepositoryToto()
@@ -52,7 +52,18 @@ class PlayerInMemoryPersistenceAdapterTest {
         repository.updatePoints(playerToto.pseudo, pointsToUpdate)
 
         // Then
-        verify(exactly = 1) { inMemoryRepository.updatePlayer(any(),any()) }
+        verify(exactly = 1) { inMemoryRepository.updatePlayer(any(), any()) }
+    }
+
+    @Test
+    fun `should call once repository when remove all players`() {
+        // Given
+        every { inMemoryRepository.removeAll() }.returns(Unit)
+
+        // When
+        repository.deleteAll()
+        // Then
+        verify(exactly = 1) { inMemoryRepository.removeAll() }
     }
 
 }

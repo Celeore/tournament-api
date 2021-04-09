@@ -8,4 +8,5 @@ interface PlayerServicePort {
     fun `retrieve all players sorted by points`(): List<Player>
     fun `update points player`(pseudo: String, points: Int): Boolean
     fun `get informations`(pseudo: String): PlayerWithRanking
+    fun `remove all`()
 }

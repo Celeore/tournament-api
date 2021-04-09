@@ -16,5 +16,9 @@ class PlayerInMemoryPersistenceAdapter(private val playerInMemoryRepository: Pla
     override fun exists(pseudo: String): Boolean =
         !playerInMemoryRepository.notExistsPlayer(pseudo)
 
+    override fun deleteAll() {
+        playerInMemoryRepository.removeAll()
+    }
+
 
 }

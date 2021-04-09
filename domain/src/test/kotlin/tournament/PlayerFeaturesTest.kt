@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test
 import tournament.entities.Player
 import tournament.entities.PlayerWithRanking
 import tournament.ports.spi.PlayerPersistencePort
-import java.lang.IllegalArgumentException
-
 
 class PlayerFeaturesTest {
     private val repository = mockk<PlayerPersistencePort>()
@@ -161,7 +159,16 @@ class PlayerFeaturesTest {
             // Then
             assertThat(player).usingRecursiveComparison().isEqualTo(playerExpected)
         }
+    }
+    @Nested
+    inner class DeleteAll {
 
+        @Test
+        fun `delete all players in repository`() {
+            every { repository.deleteAll() }.returns(Unit)
+            playerFeatures.`remove all`()
+            verify(exactly = 1) { repository.deleteAll() }
+        }
     }
 }
 
