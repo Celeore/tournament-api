@@ -1,5 +1,6 @@
 plugins {
     id 'tournament.api.kotlin-application-conventions'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 repositories {
@@ -21,6 +22,17 @@ dependencies {
     }
 }
 
-mainClassName = 'tournament.api.app.App'
+mainClassName = 'tournament.api.app.AppKt'
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'MyAppKt'
+        )
+    }
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+
+}
 
 run { args 'server', configPath + 'launcher/src/main/resources/my-app-config.yml' }
