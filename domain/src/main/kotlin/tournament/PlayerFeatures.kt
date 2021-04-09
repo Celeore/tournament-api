@@ -32,7 +32,7 @@ class PlayerFeatures(
                 val playerFound = allPlayers.find { it.pseudo == pseudo }!!
                 val ranking = allPlayers.indexOf(playerFound) + 1
                 return PlayerWithRanking(playerFound.pseudo, playerFound.points, ranking)
-            } else -> throw IllegalArgumentException("Player $pseudo does not exist")
+            } else -> throw PlayerNotExistsException(pseudo)
         }
     }
 

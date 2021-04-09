@@ -142,7 +142,7 @@ class PlayerFeaturesTest {
             // When
             // Then
             assertThatThrownBy { playerFeatures.`get informations`(unexistingPlayer)}
-                .isInstanceOf(IllegalArgumentException::class.java)
+                .isInstanceOf(PlayerNotExistsException::class.java)
                 .hasMessage("Player $unexistingPlayer does not exist")
         }
 
