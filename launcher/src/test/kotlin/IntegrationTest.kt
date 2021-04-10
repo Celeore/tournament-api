@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-import tournament.api.PlayerApi
-import tournament.api.PlayerWithRankingApi
+import tournament.api.rest.PlayerApi
+import tournament.api.rest.PlayerWithRankingApi
 import tournament.api.app.App
 import tournament.api.app.MyAppConfig
 import javax.ws.rs.client.Entity

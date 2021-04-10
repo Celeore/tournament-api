@@ -1,6 +1,6 @@
 package fixtures
 
-import tournament.api.PlayerApi
+import tournament.api.rest.PlayerApi
 
 class PlayerApiFixture {
 

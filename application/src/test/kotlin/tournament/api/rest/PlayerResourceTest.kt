@@ -6,7 +6,6 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import tournament.api.PlayerWithRankingApi
 import tournament.entities.Player
 import tournament.entities.PlayerWithRanking
 import tournament.ports.api.PlayerServicePort

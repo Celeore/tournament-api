@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  tournament-api:
+    build: .
+    ports:
+      - 8080:8080 # API
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - SERVICES=s3,lambda,dynamodb
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-3
+    ports:
+      - "4566-4597:4566-4597"
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - my_awesome_network
+  setup-resources:
+    image: amazon/aws-cli
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-3
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        # Needed so all localstack components will startup correctly (i'm sure there's a better way to do this)
+        sleep 10;
+        aws dynamodb create-table --endpoint-url=http://localstack:4566 --table-name Player \
+          --attribute-definitions \
+            AttributeName=pseudo,AttributeType=S \
+            AttributeName=points,AttributeType=N \
+          --key-schema \
+            AttributeName=pseudo,KeyType=HASH \
+            AttributeName=points,KeyType=RANGE \
+          --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5;
+        aws dynamodb create-table --endpoint-url=http://localstack:4566 --table-name Tournament \
+          --attribute-definitions \
+            AttributeName=endDate,AttributeType=S \
+          --key-schema \
+            AttributeName=endDate,KeyType=HASH \
+          --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5;
+      "
+    networks:
+      - my_awesome_network
+    depends_on:
+      - localstack
+
+networks:
+  my_awesome_network:

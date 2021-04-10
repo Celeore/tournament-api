@@ -1,7 +1,5 @@
 package tournament.api.rest
 
-import tournament.api.PlayerApi
-import tournament.api.PlayerWithRankingApi
 import tournament.entities.Player
 import tournament.entities.PlayerWithRanking
 import tournament.ports.api.PlayerServicePort

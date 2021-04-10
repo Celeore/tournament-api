@@ -1,4 +1,4 @@
-package tournament.api
+package tournament.api.rest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
