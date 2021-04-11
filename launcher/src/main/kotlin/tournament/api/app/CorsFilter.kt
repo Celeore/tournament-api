@@ -6,16 +6,16 @@ import javax.ws.rs.container.ContainerResponseFilter
 import javax.ws.rs.ext.Provider
 
 @Provider
-class CORSFilter : ContainerResponseFilter {
+class CorsFilter : ContainerResponseFilter {
     override fun filter(
         request: ContainerRequestContext?,
         response: ContainerResponseContext,
     ) {
-        response.getHeaders().add("Access-Control-Allow-Origin", "*")
-        response.getHeaders().add("Access-Control-Allow-Headers",
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers",
             "CSRF-Token, X-Requested-By, Authorization, Content-Type")
-        response.getHeaders().add("Access-Control-Allow-Credentials", "true")
-        response.getHeaders().add("Access-Control-Allow-Methods",
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        response.headers.add("Access-Control-Allow-Methods",
             "GET, POST, PUT, DELETE, OPTIONS, HEAD")
     }
 }

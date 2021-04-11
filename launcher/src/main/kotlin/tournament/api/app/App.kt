@@ -14,9 +14,8 @@ class App : Application<MyAppConfig>() {
         val domain: PlayerServicePort = PlayerFeatures(repository)
         val playerResource = PlayerResource(domain)
 
-        var jersey = environment.jersey()
-        jersey.register(playerResource)
-        jersey.register(CORSFilter())
+       environment.jersey().register(playerResource)
+        environment.jersey().register(CorsFilter())
     }
 }
 fun main(args: Array<String>){

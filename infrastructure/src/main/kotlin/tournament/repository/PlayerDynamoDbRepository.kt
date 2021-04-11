@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
 class PlayerDynamoDbRepository {
     private val dynamoDbClient = DynamoDbClient.builder()
         .region(Region.EU_WEST_3)
-        .endpointOverride(URI.create("http://localhost:4566"))
+        .endpointOverride(URI.create("http://localstack:4566"))
         .build()
     private val tableName = "Player"
 
@@ -65,6 +65,7 @@ class PlayerDynamoDbRepository {
     }
 
     fun readPlayers(): List<Player> {
+        println("nouvelle version")
         val result = dynamoDbClient.scan {
             it.tableName(tableName)
         }
