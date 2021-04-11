@@ -12,15 +12,15 @@ class PlayerInMemoryRepository {
         return playerRepository
     }
 
-    fun getAll(): List<PlayerRepository>{
+    fun getAll(): List<PlayerRepository> {
         return players.values.toList()
     }
 
-    fun updatePlayer(pseudo: String, points: Int) {
+    fun updatePlayer(pseudo: String, points: Int): Boolean {
+        if (players[pseudo] == null) return false
         players[pseudo]?.points = points
+        return true
     }
-
-    fun notExistsPlayer(pseudo: String): Boolean = !players.containsKey(pseudo)
 
     fun removeAll(): Unit = players.clear()
 }

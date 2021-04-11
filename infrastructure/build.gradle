@@ -9,5 +9,7 @@ repositories {
 dependencies {
     implementation project(':domain')
 
+    implementation "software.amazon.awssdk:dynamodb:2.16.39"
+    implementation "software.amazon.awssdk:dynamodb-enhanced:2.16.39"
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }

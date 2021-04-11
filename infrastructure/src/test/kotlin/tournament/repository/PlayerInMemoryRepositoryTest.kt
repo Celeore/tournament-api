@@ -54,26 +54,6 @@ internal class PlayerInMemoryRepositoryTest {
     }
 
     @Test
-    fun `should notExistsPlayer() return false when player exists`(){
-        // Given
-        val player1 = PlayerRepositoryFixture.hasPlayerRepositoryToto()
-        inMemoryRepository.save(player1.toPlayer())
-        // When
-        val notExistsPlayer = inMemoryRepository.notExistsPlayer(player1.pseudo)
-        // Then
-        assertThat(notExistsPlayer).isFalse
-    }
-
-    @Test
-    fun `should notExistsPlayer() return true when player exists`(){
-        // Given
-        // When
-        val notExistsPlayer = inMemoryRepository.notExistsPlayer(PlayerRepositoryFixture.hasPlayerRepositoryToto().pseudo)
-        // Then
-        assertThat(notExistsPlayer).isTrue
-    }
-
-    @Test
     fun `should clear players when removeAll called`(){
         // Given
         inMemoryRepository.save(PlayerRepositoryFixture.hasPlayerRepositoryToto().toPlayer())

@@ -46,7 +46,7 @@ class PlayerInMemoryPersistenceAdapterTest {
         // Given
         val pointsToUpdate = 10
         val playerToto = PlayerRepositoryFixture.hasPlayerRepositoryToto()
-        every { inMemoryRepository.updatePlayer(playerToto.pseudo, pointsToUpdate) }.returns(Unit)
+        every { inMemoryRepository.updatePlayer(playerToto.pseudo, pointsToUpdate) }.returns(true)
 
         // When
         repository.updatePoints(playerToto.pseudo, pointsToUpdate)

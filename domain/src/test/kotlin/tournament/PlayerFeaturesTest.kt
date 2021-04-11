@@ -101,8 +101,7 @@ class PlayerFeaturesTest {
         fun `should return true when player points can be modified`() {
             //Given
             val player = Player("toto",10)
-            every { repository.exists(player.pseudo) }.returns(true)
-            every { repository.updatePoints(player.pseudo, player.points) }.returns(Unit)
+            every { repository.updatePoints(player.pseudo, player.points) }.returns(true)
 
             // When
             val success = playerFeatures.`update points player`(player.pseudo, player.points)
@@ -116,7 +115,7 @@ class PlayerFeaturesTest {
         fun `should return false when player points are modify and player not exists`() {
             //Given
             val player = Player("toto")
-            every { repository.exists(player.pseudo) }.returns(false)
+            every { repository.updatePoints(player.pseudo, player.points) }.returns(false)
 
             // When
             val success = playerFeatures.`update points player`(player.pseudo, player.points)
@@ -135,7 +134,6 @@ class PlayerFeaturesTest {
             // Given
             val unexistingPlayer = "unexisting player"
             every{ repository.getAll() }.returns(emptyList())
-            every{ repository.exists(unexistingPlayer) }.returns(false)
 
             // When
             // Then
@@ -151,7 +149,6 @@ class PlayerFeaturesTest {
             val firstPlace = 1
             val playerExpected = PlayerWithRanking(secondPlayerWith10Points.pseudo,secondPlayerWith10Points.points, firstPlace)
             every{ repository.getAll() }.returns(listOf(firstPlayerWith0Point, secondPlayerWith10Points))
-            every{ repository.exists(playerExpected.pseudo) }.returns(true)
 
             // When
             val player = playerFeatures.`get informations`(secondPlayerWith10Points.pseudo)
