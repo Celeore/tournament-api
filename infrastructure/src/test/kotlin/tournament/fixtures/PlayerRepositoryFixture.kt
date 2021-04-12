@@ -1,6 +1,6 @@
 package tournament.fixtures
 
-import tournament.repository.PlayerRepository
+import tournament.repository.inmemory.PlayerRepository
 
 class PlayerRepositoryFixture {
     companion object {

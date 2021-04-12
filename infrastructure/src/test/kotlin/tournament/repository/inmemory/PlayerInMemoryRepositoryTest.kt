@@ -1,9 +1,10 @@
-package tournament.repository
+package tournament.repository.inmemory
 
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import tournament.fixtures.PlayerRepositoryFixture
+import tournament.repository.inmemory.PlayerInMemoryRepository
 
 internal class PlayerInMemoryRepositoryTest {
     private var inMemoryRepository = PlayerInMemoryRepository()

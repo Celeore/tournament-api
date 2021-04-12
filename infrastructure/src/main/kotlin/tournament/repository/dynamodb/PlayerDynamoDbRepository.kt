@@ -1,4 +1,4 @@
-package tournament.repository
+package tournament.repository.dynamodb
 
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
@@ -8,9 +8,10 @@ import java.net.URI
 import kotlin.system.exitProcess
 
 class PlayerDynamoDbRepository {
-    private val dynamoDbClient = DynamoDbClient.builder()
+    val awsEndpointUrl = "http://localstack:4566"
+    private val dynamoDbClient: DynamoDbClient = DynamoDbClient.builder()
         .region(Region.EU_WEST_3)
-        .endpointOverride(URI.create("http://localstack:4566"))
+        .endpointOverride(URI.create(awsEndpointUrl))
         .build()
     private val tableName = "Player"
 
@@ -37,7 +38,7 @@ class PlayerDynamoDbRepository {
     }
 
     fun updateTableItem(pseudo: String, points: Int): Boolean {
-        val itemKey = mutableMapOf(Pair(tableName, createAttributeValueString(pseudo)))
+        val itemKey = mutableMapOf(Pair("pseudo", createAttributeValueString(pseudo)))
 
         val updatedValues = mutableMapOf(
             Pair(

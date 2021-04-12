@@ -1,8 +1,7 @@
-package tournament.adapter
+package tournament.repository.dynamodb
 
 import tournament.entities.Player
 import tournament.ports.spi.PlayerPersistencePort
-import tournament.repository.PlayerDynamoDbRepository
 
 class PlayerDynamoDbPersistenceAdapter(private val playerDynamoDbRepository: PlayerDynamoDbRepository = PlayerDynamoDbRepository()) : PlayerPersistencePort {
     override fun save(player: Player) = playerDynamoDbRepository.save(player)

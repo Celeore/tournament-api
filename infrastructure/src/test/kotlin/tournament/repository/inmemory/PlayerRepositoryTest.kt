@@ -1,8 +1,9 @@
-package tournament.repository
+package tournament.repository.inmemory
 
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 import tournament.entities.Player
+import tournament.repository.inmemory.PlayerRepository
 
 class PlayerRepositoryTest {
     @Test

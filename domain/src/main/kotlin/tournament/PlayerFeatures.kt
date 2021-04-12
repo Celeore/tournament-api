@@ -13,7 +13,7 @@ class PlayerFeatures(
             .also { newPlayer -> repositoryPlayer.save(newPlayer) }
 
 
-    override fun `retrieve all players sorted by points`(): List<Player> = `get all players sorted by points`()
+    override fun `retrieve all players sorted by points`(): List<PlayerWithRanking> = `get all players sorted by points`()
 
     override fun `update points player`(pseudo: String, points: Int): Boolean =
         repositoryPlayer.updatePoints(pseudo, points)
@@ -21,18 +21,20 @@ class PlayerFeatures(
 
     override fun `get informations`(pseudo: String): PlayerWithRanking {
         val allPlayers = `get all players sorted by points`()
-        val playerFound = allPlayers.find { it.pseudo == pseudo } ?: throw PlayerNotExistsException(pseudo)
-        val ranking = allPlayers.indexOf(playerFound) + 1
-        return PlayerWithRanking(playerFound.pseudo, playerFound.points, ranking)
+        return allPlayers.find { it.pseudo == pseudo } ?: throw PlayerNotExistsException(pseudo)
     }
 
     override fun `remove all`() {
         TODO("Not yet implemented")
     }
 
+    private fun `get all players sorted by points`() = repositoryPlayer.getAll().sortedByDescending { it.points }.withRankingInformation()
 
-    //override fun `remove all`() = repositoryPlayer.deleteAll()
-
-    private fun `get all players sorted by points`() = repositoryPlayer.getAll().sortedByDescending { it.points }
-
+    private fun List<Player>.withRankingInformation(): List<PlayerWithRanking> {
+        return this.map {
+            val ranking = this.indexOf(it) + 1
+            PlayerWithRanking(it.pseudo,it.points, ranking) }
+    }
 }
+
+

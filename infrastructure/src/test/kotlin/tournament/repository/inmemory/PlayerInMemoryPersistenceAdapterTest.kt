@@ -1,4 +1,4 @@
-package tournament.adapter
+package tournament.repository.inmemory
 
 import io.mockk.every
 import io.mockk.mockk
@@ -6,7 +6,6 @@ import io.mockk.verify
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 import tournament.fixtures.PlayerRepositoryFixture
-import tournament.repository.PlayerInMemoryRepository
 
 class PlayerInMemoryPersistenceAdapterTest {
     private val inMemoryRepository = mockk<PlayerInMemoryRepository>()

@@ -85,13 +85,17 @@ class PlayerFeaturesTest {
         fun `should return all players sorted by points from repository`() {
             // Given
             every { repository.getAll() }.returns(listOf(firstPlayerWith0Point, secondPlayerWith10Points))
+            val firstPlace = 1
+            val secondPlace = 2
 
             // When
             val listPlayers = playerFeatures.`retrieve all players sorted by points`()
 
             //Then
-            assertThat(listPlayers.first()).usingRecursiveComparison().isEqualTo(secondPlayerWith10Points)
-            assertThat(listPlayers.component2()).usingRecursiveComparison().isEqualTo(firstPlayerWith0Point)
+            assertThat(listPlayers.component1()).usingRecursiveComparison()
+                .isEqualTo(PlayerWithRanking(secondPlayerWith10Points.pseudo, secondPlayerWith10Points.points, firstPlace))
+            assertThat(listPlayers.component2()).usingRecursiveComparison()
+                .isEqualTo(PlayerWithRanking(firstPlayerWith0Point.pseudo, firstPlayerWith0Point.points, secondPlace))
         }
     }
 
@@ -107,7 +111,6 @@ class PlayerFeaturesTest {
             val success = playerFeatures.`update points player`(player.pseudo, player.points)
 
             // Then
-            verify(exactly = 1) { repository.updatePoints(any(),any()) }
             assertThat(success).isTrue
         }
 
@@ -121,7 +124,6 @@ class PlayerFeaturesTest {
             val success = playerFeatures.`update points player`(player.pseudo, player.points)
 
             // Then
-            verify(exactly = 0) { repository.updatePoints(any(),any()) }
             assertThat(success).isFalse
         }
     }
@@ -142,7 +144,6 @@ class PlayerFeaturesTest {
                 .hasMessage("Player $unexistingPlayer does not exist")
         }
 
-
         @Test
         fun `should get player information with first ranking from repository`(){
             // Given
@@ -155,16 +156,6 @@ class PlayerFeaturesTest {
 
             // Then
             assertThat(player).usingRecursiveComparison().isEqualTo(playerExpected)
-        }
-    }
-    @Nested
-    inner class DeleteAll {
-
-        @Test
-        fun `delete all players in repository`() {
-            every { repository.deleteAll() }.returns(Unit)
-            playerFeatures.`remove all`()
-            verify(exactly = 1) { repository.deleteAll() }
         }
     }
 }

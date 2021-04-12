@@ -1,8 +1,7 @@
-package tournament.adapter
+package tournament.repository.inmemory
 
 import tournament.entities.Player
 import tournament.ports.spi.PlayerPersistencePort
-import tournament.repository.PlayerInMemoryRepository
 
 class PlayerInMemoryPersistenceAdapter(private val playerInMemoryRepository: PlayerInMemoryRepository = PlayerInMemoryRepository()) : PlayerPersistencePort {
 

@@ -28,8 +28,8 @@ class PlayerResourceIntegrationTest {
         // Given
         val listExpected = PlayerApiFixture.hasPlayerApiList()
         every { playerServicePort.`retrieve all players sorted by points`() } returns listOf(
-            Player("toto", 0),
-            Player("tata", 0)
+            PlayerWithRanking("toto", 0, 1),
+            PlayerWithRanking("tata", 0,2)
         )
 
         // When

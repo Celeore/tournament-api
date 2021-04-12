@@ -18,10 +18,10 @@ class PlayerResourceTest {
     @Test
     fun `should return all players when admin call get all players`() {
         // Given
-        val listExpected = PlayerApiFixture.hasPlayerApiList()
+        val listExpected = PlayerApiFixture.hasPlayerWithRankingApiList()
         every { playerServicePort.`retrieve all players sorted by points`() } returns listOf(
-            Player("toto", 0),
-            Player("tata", 0)
+            PlayerWithRanking("toto", 0, 0),
+            PlayerWithRanking("tata", 0, 1)
         )
 
         // When
@@ -52,7 +52,7 @@ class PlayerResourceTest {
         every { playerServicePort.`update points player`(playerExpected.pseudo, playerExpected.points) } returns true
 
         // When
-        val success = playerResource.`modify player points`(playerExpected.pseudo, playerExpected)
+        val success = playerResource.`modify player points`(playerExpected.pseudo, PlayerPutApi(playerExpected.points))
 
         // Then
         assertThat(success).isEqualTo(true)
@@ -66,7 +66,7 @@ class PlayerResourceTest {
         every { playerServicePort.`update points player`(playerExpected.pseudo, playerExpected.points) } returns true
 
         // When
-        val success = playerResource.`modify player points`(playerExpected.pseudo, playerExpected)
+        val success = playerResource.`modify player points`(playerExpected.pseudo, PlayerPutApi(playerExpected.points))
 
         // Then
         assertThat(success).isEqualTo(true)
