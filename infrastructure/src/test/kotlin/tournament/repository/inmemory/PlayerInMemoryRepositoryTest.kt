@@ -1,16 +1,17 @@
-package tournament.repository
+package tournament.repository.inmemory
 
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import tournament.fixtures.PlayerRepositoryFixture
+import tournament.repository.inmemory.PlayerInMemoryRepository
 
 internal class PlayerInMemoryRepositoryTest {
     private var inMemoryRepository = PlayerInMemoryRepository()
 
     @BeforeEach
     fun clear(){
-        inMemoryRepository.deleteAll()
+        inMemoryRepository.removeAll()
     }
     @Test
     fun `save a player repo when received player`(){
@@ -54,23 +55,13 @@ internal class PlayerInMemoryRepositoryTest {
     }
 
     @Test
-    fun `should notExistsPlayer() return false when player exists`(){
+    fun `should clear players when removeAll called`(){
         // Given
-        val player1 = PlayerRepositoryFixture.hasPlayerRepositoryToto()
-        inMemoryRepository.save(player1.toPlayer())
+        inMemoryRepository.save(PlayerRepositoryFixture.hasPlayerRepositoryToto().toPlayer())
         // When
-        val notExistsPlayer = inMemoryRepository.notExistsPlayer(player1.pseudo)
+        inMemoryRepository.removeAll()
         // Then
-        assertThat(notExistsPlayer).isFalse
-    }
-
-    @Test
-    fun `should notExistsPlayer() return true when player exists`(){
-        // Given
-        // When
-        val notExistsPlayer = inMemoryRepository.notExistsPlayer(PlayerRepositoryFixture.hasPlayerRepositoryToto().pseudo)
-        // Then
-        assertThat(notExistsPlayer).isTrue
+        assertThat(inMemoryRepository.getAll()).isEmpty()
     }
 
 }

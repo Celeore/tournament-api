@@ -1,3 +1,5 @@
+import io.dropwizard.Application
+import io.dropwizard.setup.Environment
 import io.dropwizard.testing.ResourceHelpers
 import io.dropwizard.testing.junit5.DropwizardAppExtension
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport
@@ -6,10 +8,14 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-import tournament.api.PlayerApi
-import tournament.api.PlayerWithRankingApi
-import tournament.api.app.App
+import tournament.PlayerFeatures
 import tournament.api.app.MyAppConfig
+import tournament.api.rest.PlayerApi
+import tournament.api.rest.PlayerResource
+import tournament.api.rest.PlayerWithRankingApi
+import tournament.ports.api.PlayerServicePort
+import tournament.ports.spi.PlayerPersistencePort
+import tournament.repository.inmemory.PlayerInMemoryPersistenceAdapter
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
@@ -18,7 +24,17 @@ import javax.ws.rs.core.MediaType
 @ExtendWith(DropwizardExtensionsSupport::class)
 class IntegrationTest {
     private val CONFIG_PATH = ResourceHelpers.resourceFilePath("integration-config.yml")
-    private val APP: DropwizardAppExtension<MyAppConfig> = DropwizardAppExtension(App::class.java, CONFIG_PATH)
+    private val APP: DropwizardAppExtension<MyAppConfig> =
+        DropwizardAppExtension(MyAppWithInMemoryRepository::class.java, CONFIG_PATH)
+
+    class MyAppWithInMemoryRepository : Application<MyAppConfig>() {
+        override fun run(configuration: MyAppConfig, environment: Environment) {
+            val repository: PlayerPersistencePort = PlayerInMemoryPersistenceAdapter()
+            val domain: PlayerServicePort = PlayerFeatures(repository)
+            val playerResource = PlayerResource(domain)
+            environment.jersey().register(playerResource)
+        }
+    }
 
     @Nested
     inner class PlayerFeature {
@@ -86,7 +102,7 @@ class IntegrationTest {
         }
 
         @Test
-        fun `should get player pseudo, points and his ranking (`() {
+        fun `should get player pseudo, points and his ranking`() {
             // Given
             val playerApi = PlayerApi("toto")
             `call create player resource`(playerApi)

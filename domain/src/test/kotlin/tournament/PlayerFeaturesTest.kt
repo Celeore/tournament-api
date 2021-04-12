@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test
 import tournament.entities.Player
 import tournament.entities.PlayerWithRanking
 import tournament.ports.spi.PlayerPersistencePort
-import java.lang.IllegalArgumentException
-
 
 class PlayerFeaturesTest {
     private val repository = mockk<PlayerPersistencePort>()
@@ -87,22 +85,26 @@ class PlayerFeaturesTest {
         fun `should return all players sorted by points from repository`() {
             // Given
             every { repository.getAll() }.returns(listOf(firstPlayerWith0Point, secondPlayerWith10Points))
+            val firstPlace = 1
+            val secondPlace = 2
 
             // When
             val listPlayers = playerFeatures.`retrieve all players sorted by points`()
 
             //Then
-            assertThat(listPlayers.first()).usingRecursiveComparison().isEqualTo(secondPlayerWith10Points)
-            assertThat(listPlayers.component2()).usingRecursiveComparison().isEqualTo(firstPlayerWith0Point)
+            assertThat(listPlayers.component1()).usingRecursiveComparison()
+                .isEqualTo(PlayerWithRanking(secondPlayerWith10Points.pseudo, secondPlayerWith10Points.points, firstPlace))
+            assertThat(listPlayers.component2()).usingRecursiveComparison()
+                .isEqualTo(PlayerWithRanking(firstPlayerWith0Point.pseudo, firstPlayerWith0Point.points, secondPlace))
         }
     }
 
     @Nested
     inner class UpdatePlayerPoints {
         @Test
-        fun `should return true when player points are modified`() {
+        fun `should return true when player points can be modified`() {
             //Given
-            val player = Player("toto")
+            val player = Player("toto",10)
             every { repository.updatePoints(player.pseudo, player.points) }.returns(true)
 
             // When
@@ -138,13 +140,12 @@ class PlayerFeaturesTest {
             // When
             // Then
             assertThatThrownBy { playerFeatures.`get informations`(unexistingPlayer)}
-                .isInstanceOf(IllegalArgumentException::class.java)
+                .isInstanceOf(PlayerNotExistsException::class.java)
                 .hasMessage("Player $unexistingPlayer does not exist")
         }
 
-
         @Test
-        fun `should throw not found player information with first ranking from repository`(){
+        fun `should get player information with first ranking from repository`(){
             // Given
             val firstPlace = 1
             val playerExpected = PlayerWithRanking(secondPlayerWith10Points.pseudo,secondPlayerWith10Points.points, firstPlace)
@@ -156,7 +157,6 @@ class PlayerFeaturesTest {
             // Then
             assertThat(player).usingRecursiveComparison().isEqualTo(playerExpected)
         }
-
     }
 }
 

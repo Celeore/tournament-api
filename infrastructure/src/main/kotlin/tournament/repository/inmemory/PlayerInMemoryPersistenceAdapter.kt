@@ -1,18 +1,20 @@
-package tournament.adapter
+package tournament.repository.inmemory
 
 import tournament.entities.Player
 import tournament.ports.spi.PlayerPersistencePort
-import tournament.repository.PlayerInMemoryRepository
 
 class PlayerInMemoryPersistenceAdapter(private val playerInMemoryRepository: PlayerInMemoryRepository = PlayerInMemoryRepository()) : PlayerPersistencePort {
 
     override fun save(player: Player): Player = playerInMemoryRepository.save(player).toPlayer()
 
     override fun getAll(): List<Player> = playerInMemoryRepository.getAll().map { it.toPlayer() }
+
     override fun updatePoints(pseudo: String, points: Int): Boolean {
-        if(playerInMemoryRepository.notExistsPlayer(pseudo)) return false
-        playerInMemoryRepository.updatePlayer(pseudo, points)
-        return true
+        return playerInMemoryRepository.updatePlayer(pseudo, points)
+    }
+
+    override fun deleteAll() {
+        playerInMemoryRepository.removeAll()
     }
 
 

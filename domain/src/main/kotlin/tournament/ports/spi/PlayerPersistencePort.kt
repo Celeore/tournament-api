@@ -6,4 +6,5 @@ interface PlayerPersistencePort {
     fun save(player: Player): Player
     fun getAll(): List<Player>
     fun updatePoints(pseudo: String, points: Int): Boolean
+    fun deleteAll()
 }
