@@ -34,7 +34,7 @@ class App : Application<MyAppConfig>() {
             CrossOriginFilter.ALLOWED_HEADERS_PARAM,
             "Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers"
         )
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PUT,POST,DELETE,HEAD")
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PATCH,POST,HEAD")
         cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true")
 
         // Add URL mapping

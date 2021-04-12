@@ -26,6 +26,10 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - my_awesome_network
+  dashboard-admin:
+    build: ./application/src/main/kotlin/tournament/api/ui/admin-dashboard
+    ports:
+      - 4200:80
   setup-resources:
     image: amazon/aws-cli
     environment:
