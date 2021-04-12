@@ -1,7 +1,6 @@
-package tournament.repository
+package tournament.repository.inmemory
 
 import tournament.entities.Player
-
 
 class PlayerInMemoryRepository {
     private val players = mutableMapOf<String, PlayerRepository>()
