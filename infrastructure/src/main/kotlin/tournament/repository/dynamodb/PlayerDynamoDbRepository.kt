@@ -66,7 +66,6 @@ class PlayerDynamoDbRepository {
     }
 
     fun readPlayers(): List<Player> {
-        println("nouvelle version")
         val result = dynamoDbClient.scan {
             it.tableName(tableName)
         }

@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Player List</h1>
+  <!-- It won't show if there is no player data -->
+  <a routerLink="/register-player" class="btn btn-success" *ngIf="hideWhenNoPlayer">
+    <i class="fas fa-plus custom-fa-plus"></i>
+    Add Player
+  </a>
+</div>
+
+<div class="pricing-header mx-auto">
+
+  <!-- No data shows when their is no player data available -->
+  <div class="no-data text-center" *ngIf="noData">
+
+    <p class="nodata-msg">No player added yet!</p>
+    <a routerLink="/register-player" class="btn btn-success">
+      <i class="fas fa-plus custom-fa-plus"></i>
+      Add Player
+    </a>
+  </div>
+
+  <!-- Showing players data -->
+  <div class="table-responsive" *ngIf="hideWhenNoPlayer">
+    <table class="table table-bordered table-responsive-sm table-responsive-md table-responsive-lg">
+      <thead>
+      <tr>
+        <th scope="col">Pseudo</th>
+        <th scope="col">Points</th>
+        <th scope="col">Rank</th>
+        <th class="text-center" scope="col">Edit</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- *ngFor loop iterates over player array and fetch the player's data -->
+      <!-- paginate pipe will add pagination in player's list, it won't show if items are less then 7 -->
+      <tr *ngFor="let player of Players | paginate: { itemsPerPage: 7, currentPage: p }; let i = index;">
+        <th scope="row">{{player.pseudo}}</th>
+        <td>{{player.points}}</td>
+        <td>{{player.ranking}}</td>
+        <td class="text-center action-block">
+          <i class="far fa-edit" routerLink="/edit-player/{{player.pseudo}}"></i>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Pagination -->
+  <pagination-controls (pageChange)="p = $event" autoHide="true" responsive="true"></pagination-controls>
+</div>

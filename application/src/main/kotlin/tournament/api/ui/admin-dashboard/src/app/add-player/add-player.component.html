@@ -1,0 +1,28 @@
+<div class="pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Add Player</h1>
+  <p class="custom-text">A demo CRUD  for <strong>player management system</strong></p>
+</div>
+
+<!-- Player form -->
+<form [formGroup]="playerForm" (ngSubmit)="submitPlayerData()" novalidate>
+  <div class="row">
+    <div class="col-lg-5 col-md-12 col-sm-12">
+      <div class="row">
+
+        <div class="col-md-12 mb-3">
+          <label>Pseudo of player</label>
+          <input type="text" formControlName="pseudo" class="form-control" required>
+          <!-- Showing errors using getter method -->
+          <p *ngIf="pseudo.touched && pseudo.invalid" class="error"><sup>*</sup>Please enter atleast pseudo</p>
+          <p *ngIf="pseudo.errors?.minlength" class="error"><sup>*</sup>Name shouldn't be less than 2 words</p>
+        </div>
+      </div>
+
+      <div class="form-group text-right">
+        <button type="button" class="btn btn-warning mr-2" (click)="ResetForm()">Reset</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!playerForm.valid">Add Player</button>
+      </div>
+
+    </div>
+  </div>
+</form>
